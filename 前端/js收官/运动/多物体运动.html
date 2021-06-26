@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    /* 1 */
+    /* div {
+      width: 100px;
+      height: 100px;
+      background: red;
+      opacity: 1;
+      margin-bottom: 100px;
+      border: 5px solid black;
+    } */
+
+
+    /* 2 */
+    /* div {
+      width: 100px;
+      height: 100px;
+      background: red;
+      opacity: 1;
+      margin-bottom: 100px;
+      border: 5px solid black;
+    } */
+
+
+    /* 3 */
+    div {
+      position: absolute;
+      left: 0px;
+      width: 100px;
+      height: 100px;
+      background: red;
+      opacity: 1;
+    }
+
+    #topDiv {
+      top: 200px;
+    }
+
+    #bottomDiv {
+      top: 400px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 1 2 -->
+  <!-- <div></div>
+  <div></div>
+  <div></div>
+  <div></div> -->
+
+
+  <!-- 3 -->
+  <div id="topDiv"></div>
+  <div id="bottomDiv"></div>
+
+  <script>
+    // 3
+    var oTopDiv = document.getElementById('topDiv');
+    var oBottomDiv = document.getElementById('bottomDiv')
+    oTopDiv.onclick = function () {
+      startMove(this, {
+        width: 400,
+        height: 400,
+        left: 200,
+        top: 300,
+        opacity: 50
+      }, function () {
+        startMove(oBottomDiv, {
+          width: 400,
+          height: 400,
+          left: 200,
+          top: 300,
+          opacity: 50
+        }, function () {
+          alert('over');
+        });
+      })
+    }
+
+    function startMove(dom, attrObj, callback) {
+      clearInterval(dom.timer);
+      var iSpeed = null,
+          iCur = null;
+      dom.timer = setInterval(function () {
+        var bStop = true;
+        for (var attr in attrObj) {
+          if (attr == 'opacity') {
+            iCur = parseFloat(getStyle(dom, attr)) * 100;
+          } else {
+            iCur = parseInt(getStyle(dom, attr));
+          }
+          iSpeed = (attrObj[attr] - iCur) / 7;
+          iSpeed = iSpeed > 0 ? Math.ceil(iSpeed) : Math.floor(iSpeed);
+          if (attr == 'opacity') {
+            dom.style.opacity = (iCur + iSpeed) / 100;
+          } else {
+            dom.style[attr] = iCur + iSpeed + 'px';
+          }
+          if (iCur != attrObj[attr]) {
+            bStop = false;
+          }
+        }
+        if (bStop) {
+          clearInterval(dom.timer);
+          typeof callback == 'function' && callback();
+        }
+      }, 30)
+    }
+
+
+    // // 2
+    // var timer = null;
+    // var oDivArray = document.getElementsByTagName('div');
+
+    // oDivArray[0].onclick = function () {
+    //   startMove(this, 'width', 400);
+    // }
+
+    // oDivArray[1].onclick = function () {
+    //   startMove(this, 'height', 400);
+    // }
+
+    // oDivArray[2].onclick = function () {
+    //   startMove(this, 'borderWidth', 20);
+    // }
+
+    // oDivArray[3].onclick = function () {
+    //   startMove(this, 'opacity', 50);
+    // }
+
+    // function startMove(dom, attr, target) {
+    //   clearInterval(dom.timer);
+    //   var iSpeed = null,
+    //       iCur = null;
+    //   dom.timer = setInterval(function () {
+    //     if (attr == 'opacity') {
+    //       iCur = parseFloat(getStyle(dom, attr)) * 100;
+    //     } else {
+    //       iCur = parseInt(getStyle(dom, attr));
+    //     }
+    //     iSpeed = (target - iCur) / 7;
+    //     iSpeed = iSpeed > 0 ? Math.ceil(iSpeed) : Math.floor(iSpeed);
+    //     if (iCur == target) {
+    //       clearInterval(dom.timer);
+    //       console.log('over');
+    //     }
+    //     if (attr == 'opacity') {
+    //       dom.style.opacity = (iCur + iSpeed) / 100;
+    //     } else {
+    //       dom.style[attr] = iCur + iSpeed + 'px';
+    //     }
+    //   }, 30)
+    // }
+
+
+    // // 1
+    // var timer = null;
+    // var oDivArray = document.getElementsByTagName('div');
+
+    // for (var i = 0; i < oDivArray.length; i++) {
+    //   oDivArray[i].onmouseenter = function () {
+    //     startMove(this, 400);
+    //   }
+    //   oDivArray[i].onmouseleave = function () {
+    //     startMove(this, 100);
+    //   }
+    // }
+
+    // function startMove(dom, target) {
+    //   clearInterval(dom.timer);
+    //   var iSpeed = null,
+    //       iCur = null;
+    //   dom.timer = setInterval(function () {
+    //     iCur = parseInt(getStyle(dom, 'width'));
+    //     iSpeed = (target - iCur) / 7;
+    //     iSpeed = iSpeed > 0 ? Math.ceil(iSpeed) : Math.floor(iSpeed);
+    //     if (iCur == target) {
+    //       clearInterval(dom.timer);
+    //       console.log('over');
+    //     } else {
+    //       dom.style.width = iCur + iSpeed + 'px';
+    //     }
+    //   }, 30)
+    // }
+
+
+    function getStyle(dom, attr) {
+      if (window.getComputedStyle) {
+        return window.getComputedStyle(dom, null)[attr];
+      } else {
+        return dom.currentStyle[attr];
+      }
+    }
+  </script>
+</body>
+
+</html>
